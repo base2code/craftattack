@@ -1,0 +1,15 @@
+name: CraftAttackSystem
+version: ${project.version}
+main: de.base2code.craftattack.CraftAttack
+api-version: 1.17
+authors: [ Base2Code ]
+description: Craftattack System
+website: base2code.de
+
+commands:
+  team:
+  tps:
+  home:
+  sethome:
+  spawn:
+  setspawn:
