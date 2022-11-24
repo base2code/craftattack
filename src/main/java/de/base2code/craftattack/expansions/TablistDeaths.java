@@ -1,7 +1,9 @@
 package de.base2code.craftattack.expansions;
 
 import de.base2code.craftattack.CraftAttack;
+import de.base2code.craftattack.utils.Utils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -35,6 +37,6 @@ public class TablistDeaths implements Listener {
         if (CraftAttack.getInstance().getTeamManager().getTeam(player) != null) {
             teamName = CraftAttack.getInstance().getTeamManager().getTeam(player);
         }
-        player.setPlayerListName(player.getName() + " [" + teamName + "§f] §c" + player.getStatistic(Statistic.DEATHS));
+        player.setPlayerListName(player.getName() + " [" + Utils.stripColorCodes(teamName) + "] §c" + player.getStatistic(Statistic.DEATHS));
     }
 }

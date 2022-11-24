@@ -23,7 +23,7 @@ public class TeamListener implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
         if (CraftAttack.getInstance().getTeamManager().getTeam(event.getPlayer()) != null) {
-            event.setMessage("[" + CraftAttack.getInstance().getTeamManager().getTeam(event.getPlayer()).replace("&", "§") + "] " + event.getMessage());
+            event.setMessage("§8[§f" + CraftAttack.getInstance().getTeamManager().getTeam(event.getPlayer()).replace("&", "§") + "§8] §f" + event.getMessage());
         }
     }
 }

@@ -14,6 +14,8 @@ public class DiscordListener extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getAuthor().isBot()) return;
 
+        System.out.println("Received message from " + event.getAuthor().getName() + ": " + event.getMessage().getContentRaw());
+
         // Registration
         if (event.getMessage().getContentRaw().startsWith("!register")) {
             String[] args = event.getMessage().getContentRaw().split(" ");
@@ -24,6 +26,7 @@ public class DiscordListener extends ListenerAdapter {
                     message.addReaction("✅").queue();
                     message.addReaction("❌").queue();
                 });
+                event.getMessage().reply("Deine Registrierung wurde erfasst. Bitte warte auf eine Antwort.").queue();
             } else {
                 event.getMessage().reply("<@" + event.getAuthor().getId() + "> Bitte gib einen Username an.").queue(message -> {
                     message.delete().queueAfter(5, TimeUnit.SECONDS);
@@ -39,6 +42,8 @@ public class DiscordListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
+        if (event.getUser().isBot()) return;
+
         // Is not #openregister channel
         if (!event.getChannel().getId().equalsIgnoreCase("915941467875340339")) return;
 

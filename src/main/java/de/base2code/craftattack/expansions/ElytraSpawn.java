@@ -36,7 +36,7 @@ public class ElytraSpawn implements Listener {
     }
 
     public void initialize() {
-        spawn = Bukkit.getWorld("world").getSpawnLocation();
+        spawn = CraftAttack.getInstance().getSpawnManager().getSpawn();
 
         elytraItem = ItemBuilder.of(Material.ELYTRA).addEnchant(Enchantment.BINDING_CURSE, 1).build();
 
@@ -50,10 +50,10 @@ public class ElytraSpawn implements Listener {
 
     public void check() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (elytra.containsKey(player.getUniqueId()) && player.getLocation().getWorld().getName().equalsIgnoreCase("world")) {
+            /*if (elytra.containsKey(player.getUniqueId()) && player.getLocation().getWorld().getName().equalsIgnoreCase("world")) {
                 player.getInventory().setChestplate(elytra.get(player.getUniqueId()));
                 elytra.remove(player.getUniqueId());
-            }
+            }*/
 
             if (player.getLocation().distance(spawn) <= RADIUS && !elytra.containsKey(player.getUniqueId())) {
                 elytra.put(player.getUniqueId(), player.getInventory().getChestplate());

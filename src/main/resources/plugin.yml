@@ -13,3 +13,4 @@ commands:
   sethome:
   spawn:
   setspawn:
+  maintenance:
