@@ -122,7 +122,7 @@ public class DiscordIntegration implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
-        getChannel().sendMessage((event.getPlayer().getName() + " » " + event.getMessage()).replace("§.", "")).queue();
+        getChannel().sendMessage((event.getPlayer().getName() + " » " + event.getMessage()).replaceAll("§.", "")).queue();
     }
 
     public void updateStatus() {
