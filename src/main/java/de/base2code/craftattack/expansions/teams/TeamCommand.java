@@ -25,8 +25,13 @@ public class TeamCommand implements CommandExecutor {
                 }
             } else if (args.length == 2) {
                 if (args[0].equalsIgnoreCase("create")) {
-                    if (CraftAttack.getInstance().getTeamManager().getTeamInfo(args[1]) != null) {
-                        player.sendMessage("§cDieses Team existiert bereits!");
+                    try {
+                        if (CraftAttack.getInstance().getTeamManager().getTeamInfo(args[1]) != null) {
+                            player.sendMessage("§cDieses Team existiert bereits!");
+                            return true;
+                        }
+                    } catch (Exception e) {
+
                     }
                     Team team = new Team(player.getUniqueId(), new ArrayList<>(), args[1]);
                     CraftAttack.getInstance().getTeamManager().setTeamInfo(team);

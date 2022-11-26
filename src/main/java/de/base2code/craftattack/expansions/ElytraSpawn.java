@@ -21,7 +21,7 @@ import java.util.UUID;
 
 public class ElytraSpawn implements Listener {
     private Location spawn;
-    private static int RADIUS = 10;
+    private static int RADIUS = 15;
 
     private final HashMap<UUID, ItemStack> elytra = new HashMap<>();
 
@@ -55,7 +55,7 @@ public class ElytraSpawn implements Listener {
                 elytra.remove(player.getUniqueId());
             }*/
 
-            if (player.getLocation().distance(spawn) <= RADIUS && !elytra.containsKey(player.getUniqueId())) {
+            if (player.getLocation().getWorld().getName().equalsIgnoreCase(spawn.getWorld().getName()) &&  player.getLocation().distance(spawn) <= RADIUS && !elytra.containsKey(player.getUniqueId())) {
                 elytra.put(player.getUniqueId(), player.getInventory().getChestplate());
                 player.getInventory().setChestplate(elytraItem);
             } else if (player.getLocation().distance(spawn) >= RADIUS && player.getLocation().add(0, -1, 0).getBlock().getType() != Material.AIR && elytra.containsKey(player.getUniqueId())) {
@@ -67,7 +67,9 @@ public class ElytraSpawn implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        event.getPlayer().getInventory().setChestplate(elytra.get(event.getPlayer().getUniqueId()));
+        if (elytra.get(event.getPlayer().getUniqueId()) != null) {
+            event.getPlayer().getInventory().setChestplate(elytra.get(event.getPlayer().getUniqueId()));
+        }
         elytra.remove(event.getPlayer().getUniqueId());
     }
 

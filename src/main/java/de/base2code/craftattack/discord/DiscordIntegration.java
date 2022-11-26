@@ -37,20 +37,30 @@ public class DiscordIntegration implements Listener {
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(this, CraftAttack.getInstance());
 
-        jda = JDABuilder.createDefault(token)
-                .addEventListeners(new DiscordListener())
-                .enableIntents(
-                        GatewayIntent.DIRECT_MESSAGES,
-                        GatewayIntent.GUILD_MEMBERS
-                )
-                .setChunkingFilter(ChunkingFilter.ALL)
-                .setMemberCachePolicy(MemberCachePolicy.ALL)
-                .build();
-        jda.awaitReady();
+        Bukkit.getScheduler().runTaskAsynchronously(CraftAttack.getInstance(), ( ) -> {
+            try {
+                jda = JDABuilder.createDefault(token)
+                        .addEventListeners(new DiscordListener())
+                        .enableIntents(
+                                GatewayIntent.DIRECT_MESSAGES,
+                                GatewayIntent.GUILD_MEMBERS
+                        )
+                        .setChunkingFilter(ChunkingFilter.ALL)
+                        .setMemberCachePolicy(MemberCachePolicy.ALL)
+                        .build();
+            } catch (LoginException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                jda.awaitReady();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
 
-        updateStatus();
+            updateStatus();
 
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(CraftAttack.getInstance(), this::updateStatus, 0, 20 * 60 * 5);
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(CraftAttack.getInstance(), this::updateStatus, 0, 20 * 60 * 5);
+        });
     }
 
     public TextChannel getChannel() {
@@ -112,7 +122,7 @@ public class DiscordIntegration implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event) {
-        getChannel().sendMessage(event.getPlayer().getName() + " » " + event.getMessage()).queue();
+        getChannel().sendMessage((event.getPlayer().getName() + " » " + event.getMessage()).replace("§.", "")).queue();
     }
 
     public void updateStatus() {

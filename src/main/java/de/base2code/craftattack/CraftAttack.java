@@ -46,19 +46,24 @@ public final class CraftAttack extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         instance = this;
+        this.getDataFolder().mkdirs();
 
         if (!new File(getDataFolder(), "config.yml").exists()) {
             this.saveDefaultConfig();
         }
         this.reloadConfig();
 
+        getLogger().info("Loading commands..");
         this.getCommand("tps").setExecutor(new TPSCommand());
         this.getCommand("maintenance").setExecutor(new Maintenance());
 
+        getLogger().info("Loading listeners..");
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new PlayerCommandPreProcessListener(), this);
         pm.registerEvents(new Maintenance(), this);
 
+        getLogger().info("Loading expansions..");
+        getLogger().info("Loading registration..");
         registration = new Registration(new File(getDataFolder(), "registration.json"));
         try {
             registration.load();
@@ -66,25 +71,31 @@ public final class CraftAttack extends JavaPlugin {
             throw new RuntimeException(e);
         }
 
+        getLogger().info("Loading team manager..");
         teamManager = new TeamManager();
 
+        getLogger().info("Loading home manager..");
         homeManager = new HomeManager();
         homeManager.initialize();
 
+        getLogger().info("Loading spawn manager..");
         spawnManager = new SpawnManager();
         spawnManager.initialize();
 
+        getLogger().info("Loading elytra spawn..");
         new ElytraSpawn(this.getConfig().getInt("elytra_radius"));
 
+        getLogger().info("Loading night skip..");
         new NightSkip();
-        new TablistDeaths();
 
-        this.getDataFolder().mkdirs();
+        getLogger().info("Loading tablist deaths..");
+        new TablistDeaths();
 
         if (new File(getDataFolder(), "maintenance").exists()) {
             maintenance = true;
         }
 
+        getLogger().info("Loading discord integration..");
         if (this.getConfig().getBoolean("discord_enabled")) {
             try {
                 discordIntegration = new DiscordIntegration(this.getConfig().getString("discord_token"), this.getConfig().getString("discord_channelid"));
@@ -94,6 +105,8 @@ public final class CraftAttack extends JavaPlugin {
                 throw new RuntimeException(e);
             }
         }
+
+        getLogger().info("Loading done!");
 
     }
 
