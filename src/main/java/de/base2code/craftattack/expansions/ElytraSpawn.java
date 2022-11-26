@@ -58,7 +58,7 @@ public class ElytraSpawn implements Listener {
             if (player.getLocation().getWorld().getName().equalsIgnoreCase(spawn.getWorld().getName()) &&  player.getLocation().distance(spawn) <= RADIUS && !elytra.containsKey(player.getUniqueId())) {
                 elytra.put(player.getUniqueId(), player.getInventory().getChestplate());
                 player.getInventory().setChestplate(elytraItem);
-            } else if (player.getLocation().distance(spawn) >= RADIUS && player.getLocation().add(0, -1, 0).getBlock().getType() != Material.AIR && elytra.containsKey(player.getUniqueId())) {
+            } else if (player.getLocation().getWorld().getName().equalsIgnoreCase(spawn.getWorld().getName()) && player.getLocation().distance(spawn) >= RADIUS && player.getLocation().add(0, -1, 0).getBlock().getType() != Material.AIR && elytra.containsKey(player.getUniqueId())) {
                 player.getInventory().setChestplate(elytra.get(player.getUniqueId()));
                 elytra.remove(player.getUniqueId());
             }
