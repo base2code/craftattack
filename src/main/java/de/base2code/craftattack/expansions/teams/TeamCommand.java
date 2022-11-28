@@ -17,10 +17,37 @@ public class TeamCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
-            if (args.length == 0 || args.length == 1) {
-                if (args.length == 1 && args[0].equalsIgnoreCase("leave")) {
-                    CraftAttack.getInstance().getTeamManager().removePlayerFromTeam(player);
-                    return true;
+            if (args.length <= 1) {
+                if (args.length == 1) {
+                    if (args[0].equalsIgnoreCase("leave")) {
+                        CraftAttack.getInstance().getTeamManager().removePlayerFromTeam(player);
+                        return true;
+                    } else if (args[0].equalsIgnoreCase("setbase")) {
+                        TeamManager teamManager = CraftAttack.getInstance().getTeamManager();
+                        Team team = teamManager.getTeamInfo(teamManager.getTeam(player));
+                        if (team != null) {
+                            if (team.getTeamLeader().equals(player.getUniqueId())) {
+                                Location playerLocation = player.getLocation();
+                                team.setBaseLocation(playerLocation);
+                                return true;
+                            }
+                        }
+                        player.sendMessage("§cDu bist nicht der Teamleiter deines Teams.");
+                        return true;
+                    } else if (args[0].equalsIgnoreCase("base")) {
+                        TeamManager teamManager = CraftAttack.getInstance().getTeamManager();
+                        Team team = teamManager.getTeamInfo(teamManager.getTeam(player));
+                        if (team != null) {
+                            if (team.getBaseLocation() != null) {
+                                player.teleport(team.getBaseLocation());
+                                return true;
+                            }
+                            player.sendMessage("§cDein Team hat noch keine Base Location gesetzt!");
+                            return true;
+                        }
+                        player.sendMessage("§cDu bist in keinem Team.");
+                        return true;
+                    }
                 } else {
                     player.sendMessage("§c/team <create|join> <teamname>");
                     player.sendMessage("§c/team <accept|kick> <username>");
@@ -78,31 +105,6 @@ public class TeamCommand implements CommandExecutor {
                         }
                         player.sendMessage("§cDu bist nicht Teamleiter oder der Spieler konnte nicht gefunden werden!");
                     }
-                    return true;
-                } else if (args[0].equalsIgnoreCase("setbase")) {
-                    TeamManager teamManager = CraftAttack.getInstance().getTeamManager();
-                    Team team = teamManager.getTeamInfo(teamManager.getTeam(player));
-                    if (team != null) {
-                        if (team.getTeamLeader().equals(player.getUniqueId())) {
-                            Location playerLocation = player.getLocation();
-                            team.setBaseLocation(playerLocation);
-                            return true;
-                        }
-                    }
-                    player.sendMessage("§cDu bist nicht der Teamleiter deines Teams.");
-                    return true;
-                } else if (args[0].equalsIgnoreCase("base")) {
-                    TeamManager teamManager = CraftAttack.getInstance().getTeamManager();
-                    Team team = teamManager.getTeamInfo(teamManager.getTeam(player));
-                    if (team != null) {
-                        if (team.getBaseLocation() != null) {
-                            player.teleport(team.getBaseLocation());
-                            return true;
-                        }
-                        player.sendMessage("§cDein Team hat noch keine Base Location gesetzt!");
-                        return true;
-                    }
-                    player.sendMessage("§cDu bist nicht der Teamleiter deines Teams.");
                     return true;
                 }
                 player.sendMessage("§c/team <create|join|accept>");
