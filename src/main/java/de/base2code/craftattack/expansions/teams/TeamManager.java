@@ -2,15 +2,16 @@ package de.base2code.craftattack.expansions.teams;
 
 import de.base2code.craftattack.CraftAttack;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Base64;
 import java.util.UUID;
 
@@ -35,17 +36,21 @@ public class TeamManager {
     public Team getTeamInfo(String teamName) {
         JSONObject info = new JSONObject(new String(Base64.getDecoder().decode(teamsConfig.getString(teamName))));
         UUID leader = UUID.fromString(info.getString("leader"));
+
+        Location base = (Location) info.get("base");
+
         ArrayList<UUID> members = new ArrayList<>();
         for (String member : info.getString("members").split(",")) {
             if (member == null || member.isEmpty()) continue;
             members.add(UUID.fromString(member));
         }
-        return new Team(leader, members, teamName);
+        return new Team(leader, base, members, teamName);
     }
 
     public void setTeamInfo(Team team) {
         JSONObject info = new JSONObject();
         info.put("leader", team.getTeamLeader().toString());
+        info.put("base", team.getBaseLocation());
         StringBuilder sb = new StringBuilder();
         for (UUID member : team.getTeamMembers()) {
             sb.append(member.toString()).append(",");
@@ -57,7 +62,6 @@ public class TeamManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         for (UUID member : team.getTeamMembers()) {
             playerConfig.set(member.toString(), team.getTeamName());
         }
