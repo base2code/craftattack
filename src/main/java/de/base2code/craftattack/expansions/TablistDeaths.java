@@ -22,8 +22,6 @@ public class TablistDeaths implements Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
-        ((Player) event.getEntity()).incrementStatistic(Statistic.DEATHS, 1);
-
         updateTablist(event.getEntity());
     }
 
